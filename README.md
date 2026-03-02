@@ -6,7 +6,7 @@ A complete full-stack boilerplate with MongoDB, Express.js, React, and Node.js.
 
 - **Backend (Node.js + Express.js)**
   - RESTful API architecture
-  - MongoDB with Mongoose ODM
+  - MongoDB with Mongoose ODM .
   - JWT authentication
   - Password hashing with bcrypt
   - Role-based access control

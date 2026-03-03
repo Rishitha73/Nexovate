@@ -614,7 +614,7 @@ export default function Login() {
                   />
                   Remember me
                 </label>
-                <a className="forgot-link" href="#forgot">Forgot password?</a>
+                <Link className="forgot-link" to="/forgot-password">Forgot password?</Link>
               </div>
 
               <button type="submit" className="login-btn" disabled={loading}>

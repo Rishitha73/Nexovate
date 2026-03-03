@@ -51,6 +51,24 @@ export const authService = {
     }
   },
 
+  forgotPassword: async (email) => {
+    try {
+      const response = await api.post('/auth/forgot-password', { email });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to send reset link' };
+    }
+  },
+
+  resetPassword: async (token, password, confirmPassword) => {
+    try {
+      const response = await api.post(`/auth/reset-password/${token}`, { password, confirmPassword });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to reset password' };
+    }
+  },
+
   // Logout user
   logout: () => {
     localStorage.removeItem('token');

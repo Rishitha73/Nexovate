@@ -1,27 +1,32 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
 
 const Navbar = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   const navbarStyles = `
     @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
 
     .navbar-wrapper {
       position: sticky;
-      top: 0;
+      top: 12px;
+      left: 0;
+      right: 0;
+      width: calc(100% - 24px);
+      margin: 0 auto;
       z-index: 1000;
       background: linear-gradient(180deg, rgba(250, 249, 255, 0.95) 0%, rgba(245, 243, 255, 0.9) 100%);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(139, 92, 246, 0.1);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      border-radius: 18px;
+      box-shadow:
+        0 0 0 1px rgba(139, 92, 246, 0.06),
+        0 0 24px rgba(124, 58, 237, 0.12),
+        0 8px 18px rgba(124, 58, 237, 0.08);
     }
 
     .navbar-container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 40px;
+      width: 100%;
+      margin: 0;
+      padding: 0 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -65,72 +70,10 @@ const Navbar = () => {
       letter-spacing: -0.5px;
     }
 
-    .navbar-center {
-      display: flex;
-      gap: 40px;
-      align-items: center;
-      flex: 1;
-      margin-left: 60px;
-    }
-
-    .navbar-link {
-      color: #1a1a2e;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 600;
-      position: relative;
-      transition: color 0.3s ease;
-      cursor: pointer;
-    }
-
-    .navbar-link:hover {
-      color: #8b5cf6;
-    }
-
-    .navbar-link::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: linear-gradient(90deg, #8b5cf6, #ec4899);
-      transition: width 0.3s ease;
-    }
-
-    .navbar-link:hover::after {
-      width: 100%;
-    }
-
     .navbar-right {
       display: flex;
       align-items: center;
       gap: 16px;
-    }
-
-    .navbar-userinfo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .navbar-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 600;
-      font-size: 14px;
-    }
-
-    .navbar-username {
-      font-size: 13px;
-      font-weight: 600;
-      color: #1a1a2e;
     }
 
     .navbar-button {
@@ -161,34 +104,10 @@ const Navbar = () => {
       background: rgba(139, 92, 246, 0.05);
     }
 
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      cursor: pointer;
-      gap: 6px;
-    }
-
-    .hamburger span {
-      width: 24px;
-      height: 2.5px;
-      background: #1a1a2e;
-      border-radius: 2px;
-      transition: all 0.3s ease;
-    }
-
     /* Tablet & Medium Screens (1024px and below) */
     @media (max-width: 1024px) {
       .navbar-container {
-        padding: 0 25px;
-      }
-
-      .navbar-center {
-        gap: 25px;
-        margin-left: 45px;
-      }
-
-      .navbar-link {
-        font-size: 13px;
+        padding: 0 20px;
       }
 
       .navbar-logo-text {
@@ -218,10 +137,6 @@ const Navbar = () => {
         gap: 8px;
       }
 
-      .navbar-center {
-        display: none;
-      }
-
       .navbar-logo-text {
         font-size: 18px;
       }
@@ -232,27 +147,6 @@ const Navbar = () => {
         font-size: 18px;
       }
 
-      .hamburger {
-        display: flex;
-      }
-
-      .hamburger span {
-        width: 22px;
-        height: 2.5px;
-      }
-
-      .hamburger.open span:nth-child(1) {
-        transform: rotate(45deg) translate(7px, 7px);
-      }
-
-      .hamburger.open span:nth-child(2) {
-        opacity: 0;
-      }
-
-      .hamburger.open span:nth-child(3) {
-        transform: rotate(-45deg) translate(6px, -6px);
-      }
-
       .navbar-right {
         gap: 8px;
       }
@@ -260,10 +154,6 @@ const Navbar = () => {
       .navbar-button {
         padding: 8px 14px;
         font-size: 11px;
-      }
-
-      .navbar-userinfo {
-        display: none;
       }
     }
 
@@ -291,11 +181,6 @@ const Navbar = () => {
       .navbar-button {
         padding: 7px 12px;
         font-size: 10px;
-      }
-
-      .hamburger span {
-        width: 20px;
-        height: 2px;
       }
     }
 
@@ -329,10 +214,6 @@ const Navbar = () => {
             <div className="navbar-logo-text">Nexovate</div>
           </Link>
 
-          <div className="navbar-center">
-            <Link to="/" className="navbar-link">Home</Link>
-          </div>
-
           <div className="navbar-right">
             <Link to="/login" className="navbar-button navbar-button-outline">
               Sign In
@@ -340,12 +221,6 @@ const Navbar = () => {
             <Link to="/register" className="navbar-button">
               Sign Up
             </Link>
-          </div>
-
-          <div className={`hamburger ${mobileMenuOpen ? 'open' : ''}`} onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            <span></span>
-            <span></span>
-            <span></span>
           </div>
         </div>
       </div>

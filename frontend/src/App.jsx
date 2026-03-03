@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
+import ChatbotWidget from './components/ChatbotWidget';
 import PrivateRoute from './components/PrivateRoute';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -11,10 +13,12 @@ import './App.css';
 
 function AppContent() {
   const location = useLocation();
+  const isHome = location.pathname === '/';
   const isDashboardPage = location.pathname === '/dashboard' || location.pathname === '/profile';
 
   return (
     <div className="app">
+      {isHome && <Navbar />}
       {isDashboardPage && <Sidebar />}
       <main className={`main-content ${isDashboardPage ? 'with-sidebar' : ''}`}>
         <Routes>
@@ -39,6 +43,7 @@ function AppContent() {
           />
         </Routes>
       </main>
+      <ChatbotWidget />
     </div>
   );
 }

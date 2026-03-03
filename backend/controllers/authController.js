@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -102,5 +103,102 @@ exports.getMe = async (req, res, next) => {
     res.json(user);
   } catch (error) {
     next(error);
+  }
+};
+
+exports.googleAuthStart = async (req, res) => {
+  try {
+    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+      return res.status(500).json({ message: 'Google OAuth is not configured on server.' });
+    }
+
+    const redirectUri =
+      process.env.GOOGLE_CALLBACK_URL ||
+      `${req.protocol}://${req.get('host')}/api/auth/google/callback`;
+
+    const params = new URLSearchParams({
+      client_id: process.env.GOOGLE_CLIENT_ID,
+      redirect_uri: redirectUri,
+      response_type: 'code',
+      scope: 'openid email profile',
+      access_type: 'offline',
+      prompt: 'select_account'
+    });
+
+    return res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`);
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to start Google OAuth.' });
+  }
+};
+
+exports.googleAuthCallback = async (req, res) => {
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+
+  try {
+    const { code } = req.query;
+
+    if (!code) {
+      return res.redirect(`${frontendUrl}/login?oauthError=Google authorization code missing`);
+    }
+
+    const redirectUri =
+      process.env.GOOGLE_CALLBACK_URL ||
+      `${req.protocol}://${req.get('host')}/api/auth/google/callback`;
+
+    const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        code: code.toString(),
+        client_id: process.env.GOOGLE_CLIENT_ID,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET,
+        redirect_uri: redirectUri,
+        grant_type: 'authorization_code'
+      })
+    });
+
+    const tokenData = await tokenResponse.json();
+
+    if (!tokenResponse.ok || !tokenData.access_token) {
+      return res.redirect(`${frontendUrl}/login?oauthError=Failed to verify Google login`);
+    }
+
+    const profileResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: {
+        Authorization: `Bearer ${tokenData.access_token}`
+      }
+    });
+
+    const profile = await profileResponse.json();
+
+    if (!profileResponse.ok || !profile.email) {
+      return res.redirect(`${frontendUrl}/login?oauthError=Failed to fetch Google profile`);
+    }
+
+    let user = await User.findOne({ email: profile.email.toLowerCase() });
+
+    if (!user) {
+      const generatedPassword = crypto.randomBytes(24).toString('hex');
+      user = await User.create({
+        name: profile.name || 'Google User',
+        email: profile.email.toLowerCase(),
+        password: generatedPassword
+      });
+    }
+
+    const token = generateToken(user._id);
+    const query = new URLSearchParams({
+      token,
+      _id: user._id.toString(),
+      name: user.name,
+      email: user.email,
+      role: user.role
+    });
+
+    return res.redirect(`${frontendUrl}/auth/google/callback?${query.toString()}`);
+  } catch (error) {
+    return res.redirect(`${frontendUrl}/login?oauthError=Google login failed`);
   }
 };

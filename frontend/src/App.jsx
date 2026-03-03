@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import GoogleAuthCallback from './pages/GoogleAuthCallback';
 import './App.css';
 
 function AppContent() {
@@ -25,6 +26,7 @@ function AppContent() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/auth/google/callback" element={<GoogleAuthCallback />} />
           <Route 
             path="/dashboard" 
             element={

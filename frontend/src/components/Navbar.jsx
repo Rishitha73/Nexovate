@@ -1,17 +1,9 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { Link } from 'react-router-dom';
 import './Navbar.css';
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   const navbarStyles = `
     @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
@@ -184,21 +176,73 @@ const Navbar = () => {
       transition: all 0.3s ease;
     }
 
+    /* Tablet & Medium Screens (1024px and below) */
+    @media (max-width: 1024px) {
+      .navbar-container {
+        padding: 0 25px;
+      }
+
+      .navbar-center {
+        gap: 25px;
+        margin-left: 45px;
+      }
+
+      .navbar-link {
+        font-size: 13px;
+      }
+
+      .navbar-logo-text {
+        font-size: 20px;
+      }
+
+      .navbar-logo-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+      }
+
+      .navbar-button {
+        padding: 9px 18px;
+        font-size: 12px;
+      }
+    }
+
+    /* Tablet Screens (768px and below) */
     @media (max-width: 768px) {
       .navbar-container {
-        padding: 0 20px;
+        padding: 0 16px;
+        height: 60px;
+      }
+
+      .navbar-brand {
+        gap: 8px;
       }
 
       .navbar-center {
         display: none;
       }
 
+      .navbar-logo-text {
+        font-size: 18px;
+      }
+
+      .navbar-logo-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+      }
+
       .hamburger {
         display: flex;
       }
 
+      .hamburger span {
+        width: 22px;
+        height: 2.5px;
+      }
+
       .hamburger.open span:nth-child(1) {
-        transform: rotate(45deg) translate(8px, 8px);
+        transform: rotate(45deg) translate(7px, 7px);
       }
 
       .hamburger.open span:nth-child(2) {
@@ -206,15 +250,71 @@ const Navbar = () => {
       }
 
       .hamburger.open span:nth-child(3) {
-        transform: rotate(-45deg) translate(7px, -7px);
+        transform: rotate(-45deg) translate(6px, -6px);
       }
 
       .navbar-right {
-        gap: 10px;
+        gap: 8px;
+      }
+
+      .navbar-button {
+        padding: 8px 14px;
+        font-size: 11px;
       }
 
       .navbar-userinfo {
         display: none;
+      }
+    }
+
+    /* Mobile Screens (640px and below) */
+    @media (max-width: 640px) {
+      .navbar-container {
+        padding: 0 12px;
+        height: 56px;
+      }
+
+      .navbar-logo-text {
+        display: none;
+      }
+
+      .navbar-logo-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+      }
+
+      .navbar-right {
+        gap: 6px;
+      }
+
+      .navbar-button {
+        padding: 7px 12px;
+        font-size: 10px;
+      }
+
+      .hamburger span {
+        width: 20px;
+        height: 2px;
+      }
+    }
+
+    /* Very Small Phones (480px and below) */
+    @media (max-width: 480px) {
+      .navbar-container {
+        padding: 0 10px;
+        height: 52px;
+      }
+
+      .navbar-logo-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+      }
+
+      .navbar-button {
+        padding: 6px 10px;
+        font-size: 9px;
       }
     }
   `;
@@ -231,37 +331,15 @@ const Navbar = () => {
 
           <div className="navbar-center">
             <Link to="/" className="navbar-link">Home</Link>
-            {user && (
-              <>
-                <Link to="/dashboard" className="navbar-link">Dashboard</Link>
-                <Link to="/profile" className="navbar-link">Profile</Link>
-              </>
-            )}
           </div>
 
           <div className="navbar-right">
-            {user ? (
-              <>
-                <div className="navbar-userinfo">
-                  <div className="navbar-avatar">
-                    {user.name?.charAt(0).toUpperCase() || 'U'}
-                  </div>
-                  <div className="navbar-username">{user.name || 'User'}</div>
-                </div>
-                <button onClick={handleLogout} className="navbar-button">
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link to="/login" className="navbar-button navbar-button-outline">
-                  Sign In
-                </Link>
-                <Link to="/register" className="navbar-button">
-                  Sign Up
-                </Link>
-              </>
-            )}
+            <Link to="/login" className="navbar-button navbar-button-outline">
+              Sign In
+            </Link>
+            <Link to="/register" className="navbar-button">
+              Sign Up
+            </Link>
           </div>
 
           <div className={`hamburger ${mobileMenuOpen ? 'open' : ''}`} onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>

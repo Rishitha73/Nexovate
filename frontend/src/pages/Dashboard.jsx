@@ -5,10 +5,19 @@ const style = `
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
+  html {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
   body {
     font-family: 'Poppins', sans-serif;
     background: #FFFBF1;
     color: #1a1a2e;
+    width: 100%;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
   }
 
   .font-display { font-family: 'Poppins', sans-serif; }
@@ -188,6 +197,7 @@ const style = `
     border-top: 2px dashed #FFB2B2;
     margin: 0 8px;
     margin-bottom: 28px;
+    min-width: 20px;
   }
 
   .resume-card {
@@ -217,6 +227,42 @@ const style = `
     margin-bottom: 12px;
     font-size: 14px;
     color: #9ca3af;
+  }
+
+  .kanban-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .kanban-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashed-line {
+      margin: 0 4px;
+      margin-bottom: 14px;
+    }
+
+    .workflow-step {
+      gap: 4px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .kanban-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .dashed-line {
+      display: none;
+    }
+
+    .workflow-step {
+      margin-bottom: 20px;
+    }
   }
 `;
 
@@ -293,51 +339,10 @@ export default function LeecoDashboard() {
   return (
     <>
       <style>{style}</style>
-      <div style={{ minHeight: "100vh" }}>
-
-        {/* Navbar */}
-        <nav style={{
-          position: "sticky", top: 0, zIndex: 100,
-          background: "rgba(255, 251, 241, 0.9)",
-          backdropFilter: "blur(16px)",
-          borderBottom: "1px solid rgba(227, 106, 106, 0.1)",
-          padding: "0 40px",
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          height: "68px"
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <div style={{
-              width: 40, height: 40, borderRadius: "50%",
-              background: "linear-gradient(135deg, #E36A6A, #FFB2B2)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: 18, color: "white", fontWeight: 700,
-              fontFamily: "Poppins, sans-serif"
-            }}>L</div>
-            <span className="font-display" style={{ fontSize: 22, fontWeight: 700, color: "#1a1a2e" }}>Leeco</span>
-          </div>
-
-          <div style={{ display: "flex", gap: "36px", alignItems: "center" }}>
-            {["Home", "Learning", "Job Opportunities"].map(nav => (
-              <span
-                key={nav}
-                className={`nav-link ${activeNav === nav ? "active" : ""}`}
-                onClick={() => setActiveNav(nav)}
-                style={{ fontSize: 15 }}
-              >
-                {nav}
-              </span>
-            ))}
-          </div>
-
-          <button className="btn-primary" style={{
-            padding: "10px 22px", borderRadius: "10px", fontSize: 14
-          }}>
-            Go To Dashboard →
-          </button>
-        </nav>
+      <div style={{ width: "100%", overflowX: "hidden" }}>
 
         {/* Hero Section */}
-        <section className="hero-bg" style={{ padding: "100px 60px 80px", textAlign: "center" }}>
+        <section className="hero-bg" style={{ padding: "clamp(40px, 8vw, 100px) clamp(16px, 5vw, 60px) clamp(40px, 8vw, 80px)", textAlign: "center", width: "100%", boxSizing: "border-box" }}>
           <div className="fade-up" style={{ animationDelay: "0.1s" }}>
             <div className="section-label" style={{ marginBottom: "32px" }}>
               ✦ AI-Powered Job Hunting
@@ -382,7 +387,7 @@ export default function LeecoDashboard() {
         </section>
 
         {/* Workflow Diagram */}
-        <section style={{ background: "white", padding: "80px 60px", borderTop: "1px solid #FFF2D0" }}>
+        <section style={{ background: "white", padding: "clamp(40px, 8vw, 80px) clamp(16px, 5vw, 60px)", borderTop: "1px solid #FFF2D0", overflowX: "auto", width: "100%", boxSizing: "border-box" }}>
           <div style={{ maxWidth: 800, margin: "0 auto" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
 
@@ -453,12 +458,12 @@ export default function LeecoDashboard() {
         </section>
 
         {/* Resume Comparison — "The Application" Section */}
-        <section style={{ padding: "100px 60px", background: "#FFFBF1" }}>
-          <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", gap: 80, alignItems: "center" }}>
+        <section style={{ padding: "clamp(40px, 8vw, 100px) clamp(16px, 5vw, 60px)", background: "#FFFBF1", width: "100%", boxSizing: "border-box" }}>
+          <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", gap: "clamp(20px, 5vw, 80px)", alignItems: "center", flexWrap: "wrap", justifyContent: "center" }}>
 
             {/* Left — Cards */}
-            <div style={{ flex: 1.2, position: "relative" }}>
-              <div style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
+            <div style={{ flex: 1.2, position: "relative", minWidth: "280px" }}>
+              <div style={{ display: "flex", gap: "clamp(12px, 3vw, 20px)", alignItems: "flex-start", flexWrap: "wrap" }}>
 
                 {/* Standard Resume */}
                 <div className="resume-card card-hover" style={{
@@ -565,8 +570,8 @@ export default function LeecoDashboard() {
         </section>
 
         {/* Career Command Center / Kanban */}
-        <section style={{ padding: "100px 60px", background: "white" }}>
-          <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", gap: 80, alignItems: "flex-start" }}>
+        <section style={{ padding: "clamp(40px, 8vw, 100px) clamp(16px, 5vw, 60px)", background: "white", width: "100%", boxSizing: "border-box" }}>
+          <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", gap: "clamp(20px, 5vw, 80px)", alignItems: "flex-start", flexWrap: "wrap", justifyContent: "center" }}>
 
             {/* Left — Text */}
             <div style={{ flex: 1, paddingTop: 20 }}>
@@ -603,7 +608,7 @@ export default function LeecoDashboard() {
             </div>
 
             {/* Right — Kanban Board */}
-            <div style={{ flex: 1.5 }}>
+            <div style={{ flex: 1.5, minWidth: "280px", width: "100%" }}>
               {/* Browser chrome */}
               <div style={{
                 background: "#f3f4f6",
@@ -629,11 +634,8 @@ export default function LeecoDashboard() {
                 border: "1px solid #FFF2D0",
                 borderTop: "none",
                 borderRadius: "0 0 16px 16px",
-                padding: "20px",
-                display: "grid",
-                gridTemplateColumns: "repeat(4, 1fr)",
-                gap: 12
-              }}>
+                padding: "20px"
+              }} className="kanban-grid">
                 {kanbanData.map((col, ci) => (
                   <div key={col.col} className="kanban-col" style={{ padding: "14px" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
@@ -689,10 +691,12 @@ export default function LeecoDashboard() {
         {/* CTA Section */}
         <section style={{
           background: "linear-gradient(135deg, #1a1a2e 0%, #2d1b69 50%, #1a1a2e 100%)",
-          padding: "100px 60px",
+          padding: "clamp(40px, 8vw, 100px) clamp(16px, 5vw, 60px)",
           textAlign: "center",
           position: "relative",
-          overflow: "hidden"
+          overflow: "hidden",
+          width: "100%",
+          boxSizing: "border-box"
         }}>
           {/* Background decoration */}
           <div style={{
@@ -730,8 +734,8 @@ export default function LeecoDashboard() {
         </section>
 
         {/* Footer */}
-        <footer style={{ background: "#0d0d1a", padding: "60px", color: "white" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 60 }}>
+        <footer style={{ background: "#0d0d1a", padding: "clamp(40px, 5vw, 60px)", color: "white", overflowX: "hidden", width: "100%", boxSizing: "border-box" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 60, flexWrap: "wrap", gap: "clamp(20px, 5vw, 40px)" }}>
             <span className="font-display" style={{ fontSize: 28, fontWeight: 800 }}>Leeco</span>
             <div style={{ display: "flex", gap: 32, color: "rgba(255,255,255,0.5)", fontSize: 14 }}>
               {["Home", "Learning", "Job Opportunities"].map(item => (
@@ -764,7 +768,9 @@ export default function LeecoDashboard() {
             fontWeight: 800,
             color: "rgba(255,255,255,0.03)",
             letterSpacing: "0.05em",
-            userSelect: "none"
+            userSelect: "none",
+            overflow: "hidden",
+            width: "100%"
           }}>LEECO</div>
         </footer>
       </div>

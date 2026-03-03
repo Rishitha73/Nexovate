@@ -1,35 +1,73 @@
 import api from './api';
 
 export const userService = {
+  // Get current user from localStorage
+  getCurrentUserId: () => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    return user._id;
+  },
+
   // Get user profile
   getProfile: async () => {
-    const response = await api.get('/users/profile');
+    const userId = userService.getCurrentUserId();
+    if (!userId) throw new Error('User not authenticated');
+    const response = await api.get(`/users/${userId}`);
     return response.data;
   },
 
   // Update user profile
   updateProfile: async (userData) => {
-    const response = await api.put('/users/profile', userData);
-    if (response.data) {
-      const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-      const updatedUser = { ...currentUser, ...response.data };
-      localStorage.setItem('user', JSON.stringify(updatedUser));
+    try {
+      const userId = userService.getCurrentUserId();
+      if (!userId) throw new Error('User not authenticated');
+      
+      const response = await api.put(`/users/${userId}`, {
+        name: userData.name,
+        email: userData.email
+      });
+      
+      if (response.data) {
+        const updatedUser = {
+          _id: response.data._id,
+          name: response.data.name,
+          email: response.data.email,
+          role: response.data.role
+        };
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+      }
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to update profile' };
     }
-    return response.data;
   },
 
   // Change password
   changePassword: async (currentPassword, newPassword) => {
-    const response = await api.put('/users/change-password', {
-      currentPassword,
-      newPassword
-    });
-    return response.data;
+    try {
+      const userId = userService.getCurrentUserId();
+      if (!userId) throw new Error('User not authenticated');
+      
+      const response = await api.put(`/users/${userId}`, {
+        password: newPassword
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to change password' };
+    }
   },
 
   // Delete account
   deleteAccount: async () => {
-    const response = await api.delete('/users/account');
-    return response.data;
+    try {
+      const userId = userService.getCurrentUserId();
+      if (!userId) throw new Error('User not authenticated');
+      
+      const response = await api.delete(`/users/${userId}`);
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || { message: 'Failed to delete account' };
+    }
   }
 };

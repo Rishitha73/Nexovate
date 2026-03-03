@@ -164,6 +164,11 @@ const styles = `
     outline: none;
     transition: all 0.3s ease;
     background: #faf9ff;
+    color: #1a1a2e;
+  }
+
+  .form-group input::placeholder {
+    color: #8b8b9e;
   }
 
   .form-group input:focus {
@@ -203,9 +208,9 @@ const styles = `
     background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
     color: white;
     border: none;
-    padding: 14px 0;
+    padding: 14px 48px;
     border-radius: 10px;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -238,18 +243,187 @@ const styles = `
     color: #7c3aed;
   }
 
+  .password-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #8b5cf6;
+    font-size: 18px;
+    padding: 8px;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .password-toggle:hover {
+    color: #7c3aed;
+  }
+
+  /* Tablet & Small Screens (768px and down) */
   @media (max-width: 768px) {
     .login-card {
       flex-direction: column;
+      max-width: 100%;
+      border-radius: 0;
     }
 
     .login-left {
-      border-radius: 20px 20px 0 0;
-      padding: 40px 30px;
+      border-radius: 0;
+      padding: 40px 25px;
+      display: none;
     }
 
     .login-right {
-      padding: 40px 30px;
+      padding: 40px 25px;
+      border-radius: 0;
+    }
+
+    .login-right h2 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .form-group input {
+      padding: 11px 14px;
+      font-size: 13px;
+    }
+
+    .login-btn {
+      padding: 12px 32px;
+      font-size: 15px;
+    }
+
+    .login-footer {
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .remember-me {
+      font-size: 12px;
+    }
+
+    .login-signup {
+      font-size: 13px;
+    }
+  }
+
+  /* Mobile Screens (640px and down) */
+  @media (max-width: 640px) {
+    .login-container {
+      padding: 10px;
+      min-height: auto;
+    }
+
+    .login-card {
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .login-right {
+      padding: 20px 16px;
+      min-height: 100vh;
+    }
+
+    .login-right h2 {
+      font-size: 22px;
+    }
+
+    .login-subtitle {
+      font-size: 12px;
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .form-group input {
+      padding: 10px 12px;
+      font-size: 12px;
+      border-radius: 8px;
+    }
+
+    .form-group input::placeholder {
+      font-size: 11px;
+    }
+
+    .login-btn {
+      padding: 12px 24px;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .login-footer {
+      flex-direction: column-reverse;
+      gap: 8px;
+      margin-bottom: 20px;
+      font-size: 11px;
+    }
+
+    .remember-me {
+      gap: 6px;
+      font-size: 11px;
+    }
+
+    .remember-me input {
+      width: 16px;
+      height: 16px;
+    }
+
+    .forgot-link {
+      font-size: 11px;
+    }
+
+    .login-signup {
+      font-size: 12px;
+    }
+
+    .password-toggle {
+      font-size: 16px;
+      padding: 6px;
+      right: 8px;
+    }
+  }
+
+  /* Very Small Phones (480px and down) */
+  @media (max-width: 480px) {
+    .login-container {
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    .login-right {
+      padding: 20px 12px;
+      min-height: 100vh;
+    }
+
+    .login-right h2 {
+      font-size: 20px;
+    }
+
+    .form-group input {
+      padding: 10px 10px;
+      font-size: 11px;
+    }
+
+    .login-btn {
+      padding: 10px 20px;
+      font-size: 13px;
     }
   }
 `;
@@ -257,18 +431,42 @@ const styles = `
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
+    
     try {
+      if (!email || !password) {
+        setError("Please enter both email and password");
+        setLoading(false);
+        return;
+      }
+
       await login(email, password);
       navigate("/dashboard");
     } catch (err) {
-      setError("Invalid email or password");
+      console.error('Login error:', err);
+      // Handle different error formats
+      let errorMessage = "Invalid email or password";
+      
+      if (err.message) {
+        errorMessage = err.message;
+      } else if (err.data?.message) {
+        errorMessage = err.data.message;
+      } else if (typeof err === 'string') {
+        errorMessage = err;
+      }
+      
+      setError(errorMessage);
+      setLoading(false);
     }
   };
 
@@ -304,21 +502,40 @@ export default function Login() {
                   type="email"
                   placeholder="your@email.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setError("");
+                  }}
                   required
+                  disabled={loading}
                 />
               </div>
 
               <div className="form-group">
                 <label htmlFor="password">Password</label>
-                <input
-                  id="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+                <div className="password-group">
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setError("");
+                    }}
+                    required
+                    disabled={loading}
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                    disabled={loading}
+                    title={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? "👁️" : "👁️‍🗨️"}
+                  </button>
+                </div>
               </div>
 
               {error && <div style={{ color: "#ef4444", fontSize: "13px", marginBottom: "20px" }}>{error}</div>}
@@ -329,13 +546,16 @@ export default function Login() {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
+                    disabled={loading}
                   />
                   Remember me
                 </label>
                 <a className="forgot-link" href="#forgot">Forgot password?</a>
               </div>
 
-              <button type="submit" className="login-btn">Sign In</button>
+              <button type="submit" className="login-btn" disabled={loading}>
+                {loading ? "Signing In..." : "Sign In"}
+              </button>
             </form>
 
             <div className="login-signup">

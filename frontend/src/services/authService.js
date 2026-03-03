@@ -3,22 +3,52 @@ import api from './api';
 export const authService = {
   // Register a new user
   register: async (name, email, password) => {
-    const response = await api.post('/auth/register', { name, email, password });
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+    try {
+      const response = await api.post('/auth/register', { name, email, password });
+      if (response.data.token) {
+        const { token, ...userData } = response.data;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(userData));
+      }
+      return {
+        user: {
+          _id: response.data._id,
+          name: response.data.name,
+          email: response.data.email,
+          role: response.data.role,
+        },
+        token: response.data.token,
+      };
+    } catch (error) {
+      console.error('Register service error:', error.response?.data || error.message);
+      // Throw the error response from server or default message
+      throw error.response?.data || { message: 'Registration failed' };
     }
-    return response.data;
   },
 
   // Login user
   login: async (email, password) => {
-    const response = await api.post('/auth/login', { email, password });
-    if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
+    try {
+      const response = await api.post('/auth/login', { email, password });
+      if (response.data.token) {
+        const { token, ...userData } = response.data;
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(userData));
+      }
+      return {
+        user: {
+          _id: response.data._id,
+          name: response.data.name,
+          email: response.data.email,
+          role: response.data.role,
+        },
+        token: response.data.token,
+      };
+    } catch (error) {
+      console.error('Login service error:', error.response?.data || error.message);
+      // Throw the error response from server or default message
+      throw error.response?.data || { message: 'Login failed' };
     }
-    return response.data;
   },
 
   // Logout user

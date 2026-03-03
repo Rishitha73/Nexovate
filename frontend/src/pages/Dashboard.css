@@ -1,7 +1,12 @@
 .dashboard-container {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+  min-height: calc(100vh - 70px);
+  background: linear-gradient(135deg, #FFFBF1 0%, #fff 100%);
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .dashboard-content {
@@ -11,23 +16,25 @@
 .dashboard-title {
   font-size: 2.5rem;
   margin-bottom: 2rem;
+  color: #1a1a2e;
 }
 
 .welcome-card {
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 8px;
+  background: white;
+  border: 1.5px solid #ede9fe;
+  border-radius: 12px;
   padding: 2rem;
   margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.08);
 }
 
 .welcome-card h2 {
   margin-bottom: 0.5rem;
-  color: #646cff;
+  color: #8b5cf6;
 }
 
 .welcome-card p {
-  color: #888;
+  color: #6b7280;
 }
 
 .dashboard-grid {
@@ -37,24 +44,142 @@
 }
 
 .dashboard-card {
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 8px;
+  background: white;
+  border: 1.5px solid #ede9fe;
+  border-radius: 12px;
   padding: 2rem;
-  transition: transform 0.3s, border-color 0.3s;
+  transition: all 0.3s ease;
   cursor: pointer;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.08);
 }
 
 .dashboard-card:hover {
   transform: translateY(-5px);
-  border-color: #646cff;
+  border-color: #8b5cf6;
+  box-shadow: 0 12px 25px rgba(139, 92, 246, 0.15);
 }
 
 .dashboard-card h3 {
   font-size: 1.5rem;
   margin-bottom: 1rem;
+  color: #1a1a2e;
 }
 
 .dashboard-card p {
-  color: #888;
+  color: #6b7280;
+}
+
+/* Tablet & Small Screens */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1.5rem 1rem;
+    min-height: calc(100vh - 60px);
+  }
+
+  .dashboard-content {
+    padding: 0.5rem;
+  }
+
+  .dashboard-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .welcome-card {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .welcome-card h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .welcome-card p {
+    font-size: 0.9rem;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .dashboard-card {
+    padding: 1.5rem;
+  }
+
+  .dashboard-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .dashboard-card p {
+    font-size: 0.85rem;
+  }
+}
+
+/* Mobile Screens */
+@media (max-width: 640px) {
+  .dashboard-container {
+    padding: 1rem 0.75rem;
+    min-height: calc(100vh - 56px);
+  }
+
+  .dashboard-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .welcome-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+  }
+
+  .welcome-card h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .welcome-card p {
+    font-size: 0.8rem;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .dashboard-card {
+    padding: 1rem;
+    border-radius: 6px;
+  }
+
+  .dashboard-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .dashboard-card p {
+    font-size: 0.8rem;
+  }
+}
+
+/* Very Small Phones */
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 0.75rem;
+  }
+
+  .dashboard-title {
+    font-size: 1.25rem;
+  }
+
+  .welcome-card {
+    padding: 0.75rem;
+  }
+
+  .dashboard-card {
+    padding: 0.75rem;
+  }
 }

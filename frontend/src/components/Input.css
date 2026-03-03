@@ -6,39 +6,97 @@
 .input-label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #ffffff;
-  font-weight: 500;
+  color: #1a1a2e;
+  font-weight: 600;
   font-size: 0.95rem;
 }
 
 .input-required {
-  color: #ff4444;
+  color: #ec4899;
 }
 
 .input-field {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #444;
-  border-radius: 4px;
-  background-color: #2a2a2a;
-  color: #ffffff;
+  border: 1.5px solid #ede9fe;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #1a1a2e;
   font-size: 1rem;
-  transition: border-color 0.3s;
+  transition: all 0.3s ease;
   box-sizing: border-box;
+  box-shadow: 0 2px 4px rgba(139, 92, 246, 0.04);
+}
+
+.input-field::placeholder {
+  color: #a9a9c0;
 }
 
 .input-field:focus {
   outline: none;
-  border-color: #646cff;
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
 }
 
 .input-field.input-error {
-  border-color: #ff4444;
+  border-color: #ec4899;
 }
 
 .error-message {
   display: block;
-  color: #ff4444;
+  color: #ec4899;
   font-size: 0.85rem;
   margin-top: 0.25rem;
+}
+
+/* Tablet & Small Screens */
+@media (max-width: 768px) {
+  .input-group {
+    margin-bottom: 1.2rem;
+  }
+
+  .input-label {
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .input-field {
+    padding: 0.65rem;
+    font-size: 0.95rem;
+  }
+
+  .error-message {
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+  }
+}
+
+/* Mobile Screens */
+@media (max-width: 640px) {
+  .input-group {
+    margin-bottom: 1rem;
+  }
+
+  .input-label {
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .input-field {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+    border-radius: 3px;
+  }
+
+  .error-message {
+    font-size: 0.75rem;
+  }
+}
+
+/* Very Small Phones */
+@media (max-width: 480px) {
+  .input-field {
+    padding: 0.55rem;
+    font-size: 0.85rem;
+  }
 }
